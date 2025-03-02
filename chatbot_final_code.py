@@ -91,7 +91,15 @@ model.add(Dense(len(train_y[0]), activation='softmax'))
 
 # Compile model. Stochastic gradient descent with Nesterov accelerated gradient gives good results for this model
 from tensorflow.keras.optimizers import SGD
-sgd = SGD(learning_rate=0.01, momentum=0.9, nesterov=True)
+from tensorflow.keras.optimizers.schedules import ExponentialDecay
+
+lr_schedule = ExponentialDecay(
+    initial_learning_rate=0.01, 
+    decay_steps=100000, 
+    decay_rate=0.96
+)
+
+sgd = SGD(learning_rate=lr_schedule, momentum=0.9, nesterov=True)
 
 model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
 
